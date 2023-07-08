@@ -15,6 +15,7 @@ def main(argv = None):
     
     parser = OptionParser(usage)
     parser.add_option("--input", default='output.dat', help="Input data file [default: %default]")
+    parser.add_option("--chan", default='Ch1', help="Channel data to read (Ch1 or Ch2) [default: %default]")
     
     (options, args) = parser.parse_args(sys.argv[1:])
     
@@ -29,6 +30,7 @@ if __name__ == '__main__':
     edep = []
     with open(options.input, 'r') as f:
         for il, l in enumerate(f.readlines()):
+            if options.chan not in l: continue
             conf = l.split(delim)[0]
             d = [int(s) for s in l.split(delim)[1].replace(']\n', '').replace('[', '').replace(' ', '').split(',')]
             conf = conf.replace('\'', '').split(';')

@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
     f = open(options.data+'.dat', 'w')
 
-    tds.write("DATA:SOURCE CH1")
+#    tds.write("DATA:SOURCE CH1")
     tds.write("ENCDG RPBinary")
     tds.write("WDMPRE:PT_Fmt Y")
     tds.write("ACQ:STOPA SEQ")
@@ -98,9 +98,10 @@ if __name__ == '__main__':
         temp=tds.read()
     
         tds.write("ACQ:STOPA SEQ")
-        tds.write("DATA:SOURCE CH1")
-        curve = tds.query_binary_values('CURVE?', datatype='h', is_big_endian=True)
-        f.write(repr(temp.replace('\n', ''))+','+repr(curve)+'\n')
+        for ch in chsr:
+            tds.write("DATA:SOURCE "+ch)
+            curve = tds.query_binary_values('CURVE?', datatype='h', is_big_endian=True)
+            f.write(repr(temp.replace('\n', ''))+','+repr(curve)+'\n')
 
     #tds.write("LOC All")
     #tds.write("ACQ:STOPA SEQ")
