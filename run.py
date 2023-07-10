@@ -46,7 +46,7 @@ if __name__ == '__main__':
     print(tds.read())
     
     chs = ['CH1', 'CH2']
-    chsr = [ch.capitalize() for ch in options.chan.split(',')]
+    chsr = [ch.upper() for ch in options.chan.split(',')]
 
     tds.write("LOC NONE")
     for ch in chs:
@@ -56,8 +56,10 @@ if __name__ == '__main__':
             tds.write(ch+":POS "+str(options.pos))
             tds.write(ch+":SCA "+str(options.ver)+".0000E-3")
             tds.write(ch+":BANdwidth ON")
+            print('channel', ch, 'is ON')
         else:
-            tds.write("SEL:"+ch+" OFF")
+            tds.write("SEL:"+ch+" is OFF")
+            print('channel', ch, 'is OFF')
     
     tds.write("HOR:RECORD 20000")
     if options.mode == 'select':
@@ -94,12 +96,11 @@ if __name__ == '__main__':
                 if i != options.nev-1:
                     tds.write("ACQUIRE:STATE RUN")
             sleep(0.1)
-        tds.write("WFMPRE:"+wfvars)
-        temp=tds.read()
-    
         tds.write("ACQ:STOPA SEQ")
-        for ch in chsr:
+        for ch in chsr:            
             tds.write("DATA:SOURCE "+ch)
+            tds.write("WFMPRE:"+wfvars)
+            temp=tds.read()
             curve = tds.query_binary_values('CURVE?', datatype='h', is_big_endian=True)
             f.write(repr(temp.replace('\n', ''))+','+repr(curve)+'\n')
 

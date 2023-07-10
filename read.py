@@ -16,6 +16,7 @@ def main(argv = None):
     parser = OptionParser(usage)
     parser.add_option("--input", default='output.dat', help="Input data file [default: %default]")
     parser.add_option("--chan", default='Ch1', help="Channel data to read (Ch1 or Ch2) [default: %default]")
+    parser.add_option("--output", default='pics', help="Output directory [default: %default]")
     
     (options, args) = parser.parse_args(sys.argv[1:])
     
@@ -24,6 +25,8 @@ def main(argv = None):
 if __name__ == '__main__':
     
     options = main()
+    
+    if not os.path.isdir(options.output): os.mkdir(options.output)
     
     delim = ',['
 
@@ -41,11 +44,11 @@ if __name__ == '__main__':
                 fig = plt.figure()
                 ax = fig.add_subplot(111)
                 ax.scatter(t,v)
-                fig.savefig('pics/pulse.pdf')
+                fig.savefig(options.output+'/pulse.pdf')
 #            print(il)
             edep.append(max(v))
             
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.hist(edep, bins=50)
-    fig.savefig('pics/edep.pdf')
+    fig.savefig(options.output+'/edep.pdf')
